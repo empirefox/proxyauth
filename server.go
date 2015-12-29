@@ -138,7 +138,9 @@ func (s *Server) handleUserInfo(c *gin.Context, info *goauth.UserInfo) error {
 	if err != nil {
 		return err
 	}
-	res.Write(c.Writer)
+	res.Header[cors.AllowOriginKey] = c.Writer.Header()[cors.AllowOriginKey]
+	cw, _, _ := c.Writer.Hijack()
+	res.Write(cw)
 	return nil
 }
 
