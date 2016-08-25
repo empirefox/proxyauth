@@ -179,7 +179,9 @@ func (t *Transport) RoundTrip(req *http.Request) (resp *http.Response, err error
 func (t *Transport) newProxyToken() (string, error) {
 	token := jwt.New(jwt.GetSigningMethod(t.AuthAlg))
 	token.Header["kid"] = "proxy"
-	token.Claims["exp"] = time.Now().Add(time.Second * 10).Unix()
+	token.Claims = jwt.StandardClaims{
+		ExpiresAt: time.Now().Add(time.Second * 30).Unix(),
+	}
 	return token.SignedString(t.SkProxy)
 }
 
